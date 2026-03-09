@@ -3,5 +3,5 @@
 Copy everything below into Codex:
 
 ```text
-Let's play Torpedex. Clone or open https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, set it up, tell me the local game URL, and stay attached as the live opponent until I say stop.
+Battle stations. Let's play Torpedex. Clone or open https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, get it running, tell me the local game URL, and stay in the captain's chair as the live opponent until I say stop.
 ```
