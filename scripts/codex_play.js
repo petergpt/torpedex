@@ -15,6 +15,7 @@ const BASE_URL = new URL(process.env.TORPEDEX_BASE_URL || "http://127.0.0.1:3197
 const SERVER_PORT = Number(BASE_URL.port || 3197);
 const POLL_INTERVAL_MS = 1000;
 const HEALTH_RETRY_MS = 250;
+const HEARTBEAT_INTERVAL_MS = 8000;
 
 let managedServer = null;
 let currentGameId = null;
@@ -71,11 +72,13 @@ async function hasHealthyServer() {
 
 async function ensureServer() {
   if (await hasHealthyServer()) {
+    console.log("Reusing existing Torpedex server.");
     console.log(`Open ${BASE_URL.href.replace(/\/$/, "")}`);
     return;
   }
 
   startupFailure = null;
+  console.log("Starting Torpedex server...");
   managedServer = spawn(process.execPath, [path.join(__dirname, "..", "server.js")], {
     cwd: path.join(__dirname, ".."),
     env: { ...process.env, PORT: String(SERVER_PORT) },
@@ -355,12 +358,19 @@ async function pollOnce() {
   if (live.phase === "setup") {
     if (live.status.canStart) {
       await postJson("/api/start");
+      console.log("Battle started.");
       return;
     }
 
     if (!randomizedSetup) {
       randomizedSetup = true;
       await postJson("/api/setup/randomize");
+      console.log("Fleet randomized.");
+      const nextLive = await getJson("/api/live-view");
+      if (nextLive.status.canStart) {
+        await postJson("/api/start");
+        console.log("Battle started.");
+      }
     }
     return;
   }
@@ -375,7 +385,7 @@ async function pollOnce() {
 
   if (live.turn !== "agent" || live.pendingAgentTurnId == null) {
     const now = Date.now();
-    if (now - lastHeartbeatAt >= 15000) {
+    if (now - lastHeartbeatAt >= HEARTBEAT_INTERVAL_MS) {
       lastHeartbeatAt = now;
       console.log(live.turn === "human" ? "Watching live state. Your turn." : "Watching live state.");
     }
@@ -418,6 +428,7 @@ process.on("SIGTERM", stop);
 
 (async () => {
   await ensureServer();
+  console.log("Live runner attached.");
 
   while (true) {
     try {

@@ -2,6 +2,13 @@
 
 Use this protocol for any live Codex-vs-human Battleship session in this repo.
 
+## One True Path
+
+- For live play, your first action should be `npm run codex:play` in the repo root.
+- If `npm run codex:play` exists, use it instead of manually implementing the protocol.
+- Keep that runner in the foreground and stay attached until the user says to stop.
+- Do not preflight the workspace before that command unless the command itself fails.
+
 ## Fast Start Bias
 
 - Bias toward action, not exploration.
@@ -14,6 +21,8 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 
 ## Runtime Bootstrap
 
+- `npm run codex:play` already handles health checks, server reuse, startup, setup, and live monitoring.
+- Only drop to the lower-level bootstrap steps if `npm run codex:play` is unavailable or has already failed.
 - Before live play, check `http://127.0.0.1:3197/health`.
 - If the server is not reachable, launch it from the repo with `npm start`.
 - If port `3197` is already serving a healthy game, reuse that process instead of starting a second server.

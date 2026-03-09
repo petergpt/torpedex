@@ -1,28 +1,37 @@
 # Codex Instructions
 
-## Do This
+Run this exact command now, in the repo root, in the foreground:
 
-1. Use the latest Torpedex repo.
-2. Run `npm run codex:play` in the foreground.
-3. Tell the user to open `http://127.0.0.1:3197`.
-4. Leave that one process running until the user says to stop.
+```bash
+npm run codex:play
+```
 
-## Do Not Do This
+Then tell the user to open `http://127.0.0.1:3197`.
+
+Keep that same process running until the user says to stop.
+
+## Only If That Command Fails
+
+- If `npm run codex:play` fails because packages are missing, run `npm install` once and retry `npm run codex:play`.
+- If the current checkout does not contain `npm run codex:play`, switch to the latest Torpedex repo and then run it.
+
+## Do Not Do Anything Before The Command
 
 - Do not inspect unrelated folders.
-- Do not run workspace inspection commands like `pwd` or `ls` unless something is actually failing.
+- Do not run workspace inspection commands like `pwd` or `ls`.
 - Do not run `git status`.
 - Do not run `npm test`.
-- Do not run `npm install` unless `npm run codex:play` fails because packages are missing.
 - Do not open the browser yourself.
-- Do not write your own Node loop.
-- Do not create a fallback loop.
+- Do not write your own loop.
+- Do not create a fallback.
 - Do not create a second watcher.
-- Do not stop after the first move.
+- Do not background the main runner.
+- Do not stop after startup or after the first move.
 
-## Notes
+## What The Built-In Runner Already Does
 
-- `npm run codex:play` already handles server startup, `/api/live-view` monitoring, setup, and turn-taking.
-- If the current checkout does not contain `npm run codex:play`, use the latest repo and then run it.
-- If `npm run codex:play` fails because packages are missing, run `npm install` and try again.
-- The built-in runner prints compact callouts like `Codex -> B4` and `B4 miss`.
+- Starts or reuses the local server on `http://127.0.0.1:3197`
+- Handles setup and `/api/live-view` monitoring
+- Takes exactly one move per `pendingAgentTurnId`
+- Prints compact callouts like `Codex -> B4` and `B4 miss`
+- Stays alive for the full match
