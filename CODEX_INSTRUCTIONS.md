@@ -1,10 +1,11 @@
 # Codex Instructions
 
-Use the latest Torpedex repo, then run this exact command in the repo root:
+Use the latest Torpedex repo.
 
-```bash
-npm start
-```
+First check `http://127.0.0.1:3197/health`.
+
+- If it is healthy, reuse that server.
+- If it is not healthy, run `npm start` in the repo root.
 
 Then tell the user to open `http://127.0.0.1:3197`.
 
