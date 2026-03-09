@@ -22,6 +22,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "codex:play": "node scripts/codex_play.js",
     "start": "node server.js",
     "test": "node --test"
   }
