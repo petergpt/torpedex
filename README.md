@@ -11,7 +11,7 @@ Torpedex is a small local game built around one simple loop: you play in the bro
 If you want the smoothest first-run experience, copy this into Codex:
 
 ```text
-Let's play Torpedex! Use the latest https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, run `npm run codex:play`, tell me to open http://127.0.0.1:3197, and keep that one process running until I say stop. Do not inspect unrelated folders, run extra checks, open the browser yourself, or create your own loop or fallback.
+Let's play Torpedex! Use the latest https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, run `npm run codex:play`, tell me to open http://127.0.0.1:3197, and keep that one process running until I say stop. Do not inspect unrelated folders, run extra checks, open the browser yourself, create your own loop or fallback, or run workspace inspection commands like `pwd` or `ls` unless something is actually failing.
 ```
 
 The same prompt also lives in [CODEX_PROMPT.md](./CODEX_PROMPT.md).
@@ -39,7 +39,6 @@ Then open [http://127.0.0.1:3197](http://127.0.0.1:3197), open this repo in Code
 
 - [CODEX_PROMPT.md](./CODEX_PROMPT.md): the copy-paste starter prompt
 - [CODEX_INSTRUCTIONS.md](./CODEX_INSTRUCTIONS.md): the detailed Codex setup and live-play instructions
-- [AGENTS.md](./AGENTS.md): the full live-play protocol Codex follows in this repo
 - [server.js](./server.js): local web server
 - [lib/game.js](./lib/game.js): game rules and state serialization
 

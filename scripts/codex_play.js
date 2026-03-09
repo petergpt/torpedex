@@ -22,6 +22,7 @@ let randomizedSetup = false;
 let lastHandledToken = null;
 let finishedAnnouncedFor = null;
 let lastHeartbeatAt = 0;
+let startupFailure = null;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -74,6 +75,7 @@ async function ensureServer() {
     return;
   }
 
+  startupFailure = null;
   managedServer = spawn(process.execPath, [path.join(__dirname, "..", "server.js")], {
     cwd: path.join(__dirname, ".."),
     env: { ...process.env, PORT: String(SERVER_PORT) },
@@ -83,6 +85,7 @@ async function ensureServer() {
   managedServer.stdout.on("data", (chunk) => process.stdout.write(chunk));
   managedServer.stderr.on("data", (chunk) => process.stderr.write(chunk));
   managedServer.on("exit", (code, signal) => {
+    startupFailure = { code, signal };
     managedServer = null;
     if (signal !== "SIGINT") {
       console.error(`Torpedex server exited${code !== null ? ` with code ${code}` : ""}.`);
@@ -91,11 +94,24 @@ async function ensureServer() {
 
   for (;;) {
     if (await hasHealthyServer()) {
+      startupFailure = null;
       console.log(`Open ${BASE_URL.href.replace(/\/$/, "")}`);
       return;
     }
+    if (startupFailure) {
+      throw new Error("Torpedex server failed to start.");
+    }
     await sleep(HEALTH_RETRY_MS);
   }
+}
+
+async function ensureHealthyRuntime() {
+  if (await hasHealthyServer()) {
+    return;
+  }
+
+  console.log("Reconnecting Torpedex server...");
+  await ensureServer();
 }
 
 function keyFor(row, col) {
@@ -405,6 +421,7 @@ process.on("SIGTERM", stop);
 
   while (true) {
     try {
+      await ensureHealthyRuntime();
       await pollOnce();
     } catch (error) {
       console.error(error.message);
