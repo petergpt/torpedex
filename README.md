@@ -11,7 +11,7 @@ Torpedex is a small local game built around one simple loop: you play in the bro
 If you want the smoothest first-run experience, copy this into Codex:
 
 ```text
-Let's play Torpedex! Clone or open https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, launch it at http://127.0.0.1:3197, and stay in the captain's chair as the live opponent until I say stop.
+Let's play Torpedex! Clone or open https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, launch it at http://127.0.0.1:3197, move fast, skip extra checks, and start taking your turns until I say stop.
 ```
 
 The same prompt also lives in [CODEX_PROMPT.md](./CODEX_PROMPT.md).

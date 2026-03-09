@@ -6,12 +6,19 @@ Use this file after you have cloned or opened the Torpedex repo.
 
 Set up the game locally, tell the user which URL to open, and then stay attached as the live Codex opponent until the game ends or the user explicitly tells you to stop.
 
+## Fast Path
+
+- Bias toward action, not exploration.
+- Use the obvious existing repo if it is already open or already present where the user pointed you. Otherwise clone directly and continue.
+- Do not waste time scanning unrelated folders, listing multiple workspaces, or narrating every small check.
+- Skip `git status`, `npm test`, browser sanity checks, and other preflight work unless the user explicitly asked for them or the normal launch path fails.
+- As soon as the server is reachable, switch immediately to `/api/live-view` monitoring and live play.
+
 ## Setup
 
 1. Read [README.md](./README.md) for the user-facing overview.
 2. Read [AGENTS.md](./AGENTS.md) for the repo-specific live-play protocol.
 3. Run `npm install`.
-4. Run `npm test` once to confirm the repo is healthy.
 
 ## Launch
 
@@ -20,7 +27,7 @@ Set up the game locally, tell the user which URL to open, and then stay attached
 - If `3197` is already serving a healthy Torpedex game, reuse that server instead of starting a second one.
 - If no healthy server is running, start the app from the repo with `npm start`.
 - Keep one long-lived server process only.
-- Once the app is reachable, tell the user exactly which local URL to open.
+- Once the app is reachable, tell the user to open `http://127.0.0.1:3197`, then immediately switch to live monitoring.
 
 ## Live Play
 

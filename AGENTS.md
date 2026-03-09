@@ -2,6 +2,13 @@
 
 Use this protocol for any live Codex-vs-human Battleship session in this repo.
 
+## Fast Start Bias
+
+- Bias toward action, not exploration.
+- Do not spend time scanning unrelated folders or enumerating the user's workspace before taking the obvious repo path.
+- Do not run `git status`, `npm test`, browser sanity checks, or similar preflight steps unless the user explicitly asked for them or the normal launch path fails.
+- Once the server is up, switch immediately to `/api/live-view` monitoring and live play.
+
 ## Runtime Bootstrap
 
 - Before live play, check `http://127.0.0.1:3197/health`.
