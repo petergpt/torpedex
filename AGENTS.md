@@ -9,6 +9,7 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 - Do not run `git status`, `npm test`, `npm install`, browser sanity checks, or similar preflight steps unless the user explicitly asked for them or the normal launch path fails.
 - Prefer the built-in runner `npm run codex:play` over ad-hoc inline loops.
 - Do not start helper bots, fallback loops, or browser-driven turn systems if `npm run codex:play` is available.
+- If the current checkout does not contain `npm run codex:play`, update to the latest repo or clone a fresh copy before doing anything else.
 - Once the server is up, switch immediately to `/api/live-view` monitoring and live play.
 
 ## Runtime Bootstrap

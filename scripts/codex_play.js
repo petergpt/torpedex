@@ -21,6 +21,7 @@ let currentGameId = null;
 let randomizedSetup = false;
 let lastHandledToken = null;
 let finishedAnnouncedFor = null;
+let lastHeartbeatAt = 0;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -357,6 +358,11 @@ async function pollOnce() {
   }
 
   if (live.turn !== "agent" || live.pendingAgentTurnId == null) {
+    const now = Date.now();
+    if (now - lastHeartbeatAt >= 15000) {
+      lastHeartbeatAt = now;
+      console.log(live.turn === "human" ? "Watching live state. Your turn." : "Watching live state.");
+    }
     return;
   }
 

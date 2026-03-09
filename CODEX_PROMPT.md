@@ -3,5 +3,5 @@
 Copy this into Codex:
 
 ```text
-Let's play Torpedex! Clone or open https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, launch it at http://127.0.0.1:3197, move fast, skip extra checks, and start taking your turns until I say stop.
+Let's play Torpedex! Use the latest https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, run `npm run codex:play`, tell me to open http://127.0.0.1:3197, and keep that one process running until I say stop. Do not inspect unrelated folders, run extra checks, open the browser yourself, or create your own loop or fallback.
 ```
