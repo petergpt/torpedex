@@ -18,29 +18,28 @@ Most AI game demos are one-shot. Torpedex is built for continuous play:
 
 Requires Node.js 20 or newer.
 
-### 1. Start the app
+### Easiest Option: Let Codex Do Almost Everything
+
+If you want the smoothest first-run experience, open [CODEX_PROMPT.md](./CODEX_PROMPT.md), copy the prompt, and paste it into Codex.
+
+That prompt is written from a new user's point of view. It tells Codex to:
+
+- clone the repo if it is not already present
+- install dependencies
+- run the test suite once
+- launch the local app
+- tell you which URL to open
+- stay attached as the live opponent through the whole match
+
+### Manual Option
+
+If you would rather start the app yourself:
 
 ```bash
 npm install && npm start
 ```
 
-Then open [http://127.0.0.1:3197](http://127.0.0.1:3197).
-
-### 2. Open this repo in Codex
-
-Open the repo in Codex so it can read the local files and run the game server if needed.
-
-### 3. Paste the starter prompt
-
-Open [CODEX_PROMPT.md](./CODEX_PROMPT.md), copy the prompt, and paste it into Codex.
-
-That prompt tells Codex to:
-
-- check whether the server is already running
-- start the game if setup is ready
-- watch `/api/live-view` as the canonical state surface
-- make exactly one move per turn token
-- stay attached to the live session until the game ends or you say stop
+Then open [http://127.0.0.1:3197](http://127.0.0.1:3197), open this repo in Codex, and paste the prompt from [CODEX_PROMPT.md](./CODEX_PROMPT.md).
 
 ## What Playing Feels Like
 
