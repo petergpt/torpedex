@@ -23,7 +23,7 @@ Requires Node.js 20 or newer.
 If you want the smoothest first-run experience, copy this entire prompt into Codex:
 
 ```text
-Clone https://github.com/petergpt/torpedex into a local folder named torpedex if it is not already in the workspace. Then open that repo, read README.md and CODEX_INSTRUCTIONS.md, follow those instructions to install and launch the game, tell me which local URL to open, and stay attached as the live Codex opponent until the game ends or I tell you to stop.
+Clone or open https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, set it up, tell me the local game URL, and stay attached as the live opponent until I say stop.
 ```
 
 The same prompt also lives in [CODEX_PROMPT.md](./CODEX_PROMPT.md).
