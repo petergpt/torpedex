@@ -1,6 +1,6 @@
 # Codex Starter Prompt
 
-Copy everything below into Codex. This version is written for a first-time user, not just someone who already has the repo open.
+Copy everything below into Codex:
 
 ```text
 Set up and run Torpedex for me from scratch, then stay attached as the live Codex opponent.
@@ -39,7 +39,7 @@ Speech style:
 - Keep commentary short and mechanical unless I ask for strategy.
 
 Important:
-- Follow the repo AGENTS.md for the full live-play protocol.
+- Follow the repo AGENTS.md for the full live-play protocol once you are inside the repo.
 - Do not rely on browser prose when structured API state is available.
 - Keep one long-lived server process and one monitoring loop only.
 ```
