@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Torpedex</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="fit-root">
+      <div id="app-shell" class="app-shell">
+        <header class="topbar">
+          <div class="brand">
+            <img src="/logo.svg" alt="" class="brand-mark" />
+            <div class="brand-copy">
+              <span class="brand-name">Torpedex</span>
+            </div>
+          </div>
+
+          <div class="hud-strip" aria-label="Match status">
+            <div id="phase-chip" class="hud-chip" data-tone="setup">
+              <span class="hud-dot" aria-hidden="true"></span>
+              <span id="phase-chip-text" class="hud-text">Setup</span>
+            </div>
+            <div id="turn-chip" class="hud-chip" data-tone="human">
+              <span class="hud-dot" aria-hidden="true"></span>
+              <span id="turn-chip-text" class="hud-text">Deploy</span>
+            </div>
+            <div class="hud-chip hud-chip-count" data-tone="human">
+              <span class="hud-text">You</span>
+              <strong id="human-count" class="hud-value">5</strong>
+            </div>
+            <div class="hud-chip hud-chip-count" data-tone="agent">
+              <span class="hud-text">Codex</span>
+              <strong id="agent-count" class="hud-value">5</strong>
+            </div>
+          </div>
+
+          <button id="reset-button" class="button button-secondary" type="button">Reset</button>
+        </header>
+
+        <main class="battle-layout">
+          <section class="play-stage">
+            <div class="battlefield-head" aria-live="polite">
+              <span class="battlefield-side">Your Dock</span>
+              <strong id="battlefield-status" class="battlefield-status">Stand by</strong>
+              <span class="battlefield-side battlefield-side-target">Codex Waters</span>
+            </div>
+
+            <section class="battlefield">
+              <section class="board-column board-column-own">
+                <div id="own-frame" class="board-frame">
+                  <div id="own-board" class="board-shell"></div>
+                </div>
+
+                <div id="human-fleet-strip" class="fleet-strip" aria-label="Your fleet"></div>
+              </section>
+
+              <section class="board-column board-column-target">
+                <div id="target-frame" class="board-frame">
+                  <div id="target-board" class="board-shell"></div>
+                </div>
+
+                <div id="agent-fleet-strip" class="fleet-strip" aria-label="Codex fleet status"></div>
+              </section>
+            </section>
+
+            <section id="setup-dock" class="setup-dock">
+              <div id="ship-picker" class="ship-picker" aria-label="Ship picker"></div>
+
+              <div class="setup-actions">
+                <button
+                  id="rotate-button"
+                  class="button button-utility"
+                  type="button"
+                  aria-label="Rotate ship"
+                  title="Rotate ship"
+                >
+                  <span class="button-icon-glyph button-icon-glyph-rotate" aria-hidden="true"></span>
+                  <span class="button-label">Rotate</span>
+                </button>
+                <button
+                  id="randomize-button"
+                  class="button button-utility"
+                  type="button"
+                  aria-label="Auto place fleet"
+                  title="Auto place fleet"
+                >
+                  <span class="button-icon-glyph button-icon-glyph-random" aria-hidden="true"></span>
+                  <span class="button-label">Auto Place</span>
+                </button>
+                <button
+                  id="clear-button"
+                  class="button button-utility"
+                  type="button"
+                  aria-label="Clear board"
+                  title="Clear board"
+                >
+                  <span class="button-icon-glyph button-icon-glyph-clear" aria-hidden="true"></span>
+                  <span class="button-label">Clear</span>
+                </button>
+                <button id="start-button" class="button button-launch" type="button">
+                  <span class="button-icon-glyph button-icon-glyph-launch" aria-hidden="true"></span>
+                  <span class="button-label">Start Battle</span>
+                </button>
+              </div>
+            </section>
+          </section>
+
+          <aside id="captain-panel" class="captain-panel">
+            <button
+              id="captain-toggle"
+              class="captain-toggle"
+              type="button"
+              aria-label="Toggle captain feed"
+              title="Toggle captain feed"
+              aria-expanded="true"
+              aria-controls="captain-console"
+            >
+              <span class="captain-toggle-radar" aria-hidden="true"></span>
+              <span class="captain-toggle-ping" aria-hidden="true"></span>
+            </button>
+
+            <div id="captain-console" class="captain-console">
+              <div class="captain-console-head">
+                <div class="captain-console-title-block">
+                  <strong class="captain-console-title">Captain Feed</strong>
+                </div>
+                <span id="captain-console-state" class="captain-console-state">Stand by</span>
+              </div>
+
+              <div id="captain-feed" class="captain-feed" aria-live="polite"></div>
+            </div>
+          </aside>
+        </main>
+
+        <div id="feedback-overlay" class="feedback-overlay" aria-live="polite" aria-atomic="true">
+          <span id="feedback-icon" class="feedback-icon" aria-hidden="true"></span>
+          <span id="feedback-text" class="feedback-text"></span>
+        </div>
+
+        <p id="sr-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

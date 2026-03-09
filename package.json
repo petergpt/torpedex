@@ -1,0 +1,28 @@
+{
+  "name": "codex-battleship",
+  "version": "1.0.0",
+  "description": "Play Battleship against Codex in a live local match.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/petergpt/torpedex.git"
+  },
+  "homepage": "https://github.com/petergpt/torpedex#readme",
+  "bugs": {
+    "url": "https://github.com/petergpt/torpedex/issues"
+  },
+  "keywords": [
+    "battleship",
+    "codex",
+    "game",
+    "local-first",
+    "openai"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,42 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="6" y="6" width="116" height="116" rx="34" fill="url(#panel)" stroke="url(#frame)" stroke-width="2"/>
+  <circle cx="64" cy="64" r="33" stroke="url(#ring)" stroke-width="2.5" stroke-dasharray="5 7" opacity="0.85"/>
+  <circle cx="64" cy="64" r="21" stroke="#7BD5FF" stroke-width="2" opacity="0.72"/>
+  <path d="M64 21V36" stroke="#7BD5FF" stroke-width="3" stroke-linecap="round" opacity="0.78"/>
+  <path d="M64 92V107" stroke="#7BD5FF" stroke-width="3" stroke-linecap="round" opacity="0.78"/>
+  <path d="M21 64H36" stroke="#7BD5FF" stroke-width="3" stroke-linecap="round" opacity="0.78"/>
+  <path d="M92 64H107" stroke="#7BD5FF" stroke-width="3" stroke-linecap="round" opacity="0.78"/>
+  <g filter="url(#glow)">
+    <path d="M33 70C35.8 66.2 40.8 63 48 60.4L79 48.8C82.6 47.4 85.8 47.8 88.4 49.9L96.2 56.1C98.6 58.1 99.8 60.7 99.8 64C99.8 67.3 98.6 69.9 96.2 71.9L88.4 78.1C85.8 80.2 82.6 80.6 79 79.2L48 67.6C40.8 65 35.8 61.8 33 58V70Z" fill="url(#torpedo)"/>
+    <path d="M41 63.8L82 63.8" stroke="#F7FBFF" stroke-opacity="0.64" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M78.5 51.5L87.5 63.8L78.5 76.1" stroke="#F7FBFF" stroke-opacity="0.35" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 64H36" stroke="#FFB15A" stroke-width="5" stroke-linecap="round"/>
+    <path d="M18 64H24" stroke="#FFD977" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  </g>
+  <circle cx="64" cy="64" r="5.5" fill="#08151F" stroke="#F7FBFF" stroke-width="2.6"/>
+  <defs>
+    <linearGradient id="panel" x1="16" y1="12" x2="111" y2="117" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#123A57"/>
+      <stop offset="0.54" stop-color="#0A2030"/>
+      <stop offset="1" stop-color="#08131D"/>
+    </linearGradient>
+    <linearGradient id="frame" x1="17" y1="14" x2="109" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7AF0D1" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#70C4FF" stop-opacity="0.18"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="31" y1="32" x2="94" y2="94" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7AF0D1"/>
+      <stop offset="1" stop-color="#70C4FF"/>
+    </linearGradient>
+    <linearGradient id="torpedo" x1="33" y1="49" x2="97" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFCB79"/>
+      <stop offset="0.38" stop-color="#FF9658"/>
+      <stop offset="1" stop-color="#D9563A"/>
+    </linearGradient>
+    <filter id="glow" x="12" y="42" width="94" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="1.8" result="effect1_foregroundBlur"/>
+    </filter>
+  </defs>
+</svg>
