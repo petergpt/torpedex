@@ -15,7 +15,7 @@ const BASE_URL = new URL(process.env.TORPEDEX_BASE_URL || "http://127.0.0.1:3197
 const SERVER_PORT = Number(BASE_URL.port || 3197);
 const POLL_INTERVAL_MS = 1000;
 const HEALTH_RETRY_MS = 250;
-const HEARTBEAT_INTERVAL_MS = 8000;
+const HEARTBEAT_INTERVAL_MS = 5000;
 
 let managedServer = null;
 let currentGameId = null;
@@ -123,6 +123,14 @@ function keyFor(row, col) {
 
 function labelFor(row, col) {
   return `${String.fromCharCode(65 + row)}${col + 1}`;
+}
+
+function logWaitingState(live) {
+  const parts = [`phase=${live.phase}`];
+  if (live.turn) {
+    parts.push(`turn=${live.turn}`);
+  }
+  console.log(`Waiting. ${parts.join(" ")}`);
 }
 
 function buildShotMap(codexShots) {
@@ -387,7 +395,7 @@ async function pollOnce() {
     const now = Date.now();
     if (now - lastHeartbeatAt >= HEARTBEAT_INTERVAL_MS) {
       lastHeartbeatAt = now;
-      console.log(live.turn === "human" ? "Watching live state. Your turn." : "Watching live state.");
+      logWaitingState(live);
     }
     return;
   }

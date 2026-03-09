@@ -18,6 +18,19 @@ Keep that same process running until the user says to stop.
 
 Starting the process is not completion. After launch, stay attached to the live session and keep watching for turns.
 
+## Runtime State Machine
+
+Treat `/api/live-view` as the source of truth.
+
+- `phase=setup`: active session, not completion
+- `phase=playing` and `turn=human`: active session, waiting state, not completion
+- `phase=playing` and `turn=agent`: active session, Codex should act once for the current token
+- `phase=finished`: session complete
+
+The most important rule is this:
+
+- `phase=playing` with `turn=human` means keep waiting and keep monitoring. Do not wrap up.
+
 ## Do Not Do Anything Before The Command
 
 - Do not look for an existing Torpedex checkout.
@@ -44,6 +57,7 @@ Starting the process is not completion. After launch, stay attached to the live 
 - Keep watching the same runner session or `/api/live-view`.
 - If it is the human turn, stay attached and keep waiting. That is not completion.
 - If Codex moves, continue watching for the next turn instead of wrapping up.
+- Do not infer completion from silence, idleness, or the port being open. Completion comes only from `phase=finished` or an explicit user stop.
 
 ## What The Built-In Runner Already Does
 
