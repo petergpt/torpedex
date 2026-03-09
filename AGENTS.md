@@ -2,34 +2,28 @@
 
 Use this protocol for any live Codex-vs-human Battleship session in this repo.
 
-## One True Path
+## No Autoplay Code
 
-- For live play, your first action should be `./play` in the repo root.
-- If `./play` exists, use it instead of manually implementing the protocol.
-- Keep that runner in the foreground and stay attached until the user says to stop.
-- Do not preflight the workspace before that command unless the command itself fails.
-- Launching `./play` is not task completion. Stay in live-play mode after launch.
-- Treat `phase=playing` with `turn=human` as an active waiting state, not a terminal state.
-- Treat the whole assignment as a monitoring task that ends only at a terminal state.
+- There must not be any autoplay script, helper bot, heuristic engine, or API-driven opponent in this repo.
+- Codex itself is the opponent during live play.
+- Codex should monitor `/api/live-view`, reason from the structured state, and choose the move itself.
+- `phase=playing` with `turn=human` is an active waiting state, not a terminal state.
+- The assignment ends only at a terminal state or when the user says to stop.
 
 ## Fast Start Bias
 
 - Bias toward action, not exploration.
 - Do not spend time scanning unrelated folders or enumerating the user's workspace before taking the obvious repo path.
 - Do not run `git status`, `npm test`, `npm install`, browser sanity checks, or similar preflight steps unless the user explicitly asked for them or the normal launch path fails.
-- Prefer the built-in runner `./play` over ad-hoc inline loops.
-- Do not start helper bots, fallback loops, or browser-driven turn systems if `./play` is available.
-- If the current checkout does not contain `./play`, update to the latest repo or clone a fresh copy before doing anything else.
+- Do not start helper bots, fallback loops, browser-driven turn systems, or local move-selection code.
 - Once the server is up, switch immediately to `/api/live-view` monitoring and live play.
 
 ## Runtime Bootstrap
 
-- `./play` already handles health checks, server reuse, startup, setup, and live monitoring.
-- Only drop to the lower-level bootstrap steps if `./play` is unavailable or has already failed.
 - Before live play, check `http://127.0.0.1:3197/health`.
 - If the server is not reachable, launch it from the repo with `npm start`.
 - If port `3197` is already serving a healthy game, reuse that process instead of starting a second server.
-- Keep exactly one long-lived server process and one compact monitoring loop during live play.
+- Keep exactly one long-lived server process during live play.
 - After launching or reconnecting, open `/api/live-view` immediately and treat that state as canonical.
 
 ## Canonical State
@@ -129,14 +123,14 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 - Keep `pendingAgentTurnId` monotonic and reject stale tokens server-side.
 - One legal move per turn token. No retries on the same turn without a fresh state read.
 - Prefer the push stream when available instead of polling only. The browser now consumes `/api/stream`; Codex can still use `/api/live-view` as the canonical turn source.
-- During live play, keep one server session and one compact monitoring loop only. Avoid starting helper bots or extra player processes.
-- During live play, keep one monitoring loop continuously active. Do not stop polling just because you already spoke or because the last action succeeded.
+- During live play, keep one server session only. Avoid helper bots or extra player processes.
+- During live play, keep monitoring continuously active. Do not stop polling just because you already spoke or because the last action succeeded.
 - During setup, do not spend live turns shuffling ships around unless the user is actively editing the fleet. The default board is already randomized and playable.
 - Use compact terminal actions:
   - read `/api/live-view`
   - if setup is ready, call `/api/start`
   - optionally post `/api/captain-note` with a short real summary or reaction
-  - decide one legal shot
+  - decide one legal shot yourself from the structured state
   - post `/api/agent-fire`
   - speak only the coordinate and coarse result
 - Batch supporting commands in parallel when possible, but never queue speculative shots before the current `pendingAgentTurnId` is confirmed.

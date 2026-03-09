@@ -1,24 +1,14 @@
 # Codex Instructions
 
-Default path from outside the repo:
+Use the latest Torpedex repo, then run this exact command in the repo root:
 
 ```bash
-tmp="$(mktemp -d /tmp/torpedex-XXXXXX)" && git clone --depth 1 https://github.com/petergpt/torpedex.git "$tmp" && cd "$tmp" && ./play
-```
-
-If you are already inside a fresh Torpedex checkout, run this exact command now, in the repo root, in the foreground:
-
-```bash
-./play
+npm start
 ```
 
 Then tell the user to open `http://127.0.0.1:3197`.
 
-Keep that same process running until the user says to stop.
-
-Starting the process is not completion. After launch, stay attached to the live session and keep watching for turns.
-
-This is a long-running monitoring task, not a one-shot setup task.
+Keep the server running. After launch, you must monitor the live game yourself and choose Codex turns yourself.
 
 ## Runtime State Machine
 
@@ -26,46 +16,37 @@ Treat `/api/live-view` as the source of truth.
 
 - `phase=setup`: active session, not completion
 - `phase=playing` and `turn=human`: active session, waiting state, not completion
-- `phase=playing` and `turn=agent`: active session, Codex should act once for the current token
+- `phase=playing` and `turn=agent`: active session, Codex should decide one move itself for the current token
 - `phase=finished`: session complete
 
 The most important rule is this:
 
 - `phase=playing` with `turn=human` means keep waiting and keep monitoring. Do not wrap up.
 
-## Do Not Do Anything Before The Command
+## Do Not Do This
 
-- Do not look for an existing Torpedex checkout.
-- Do not inspect unrelated folders.
-- Do not run workspace inspection commands like `pwd` or `ls`.
-- Do not run `git status`.
-- Do not run `git remote -v`.
-- Do not run `git pull`.
-- Do not run `git fetch`.
-- Do not run `npm test`.
-- Do not run `npm install`.
 - Do not open the browser yourself.
-- Do not write your own loop.
-- Do not create a fallback.
-- Do not create a second watcher.
-- Do not background the main runner.
+- Do not write or run autoplay code.
+- Do not use local heuristics or helper scripts to choose moves.
+- Do not call external APIs or model APIs to choose moves.
+- Do not create a fallback opponent.
 - Do not stop after startup or after the first move.
 - Do not say the task is done right after launch.
-- Do not send a wrap-up message like "say stop when you want me to terminate it."
 
 ## After Launch
 
 - Stay in live-play mode until the user says to stop or the game ends.
-- Keep watching the same runner session or `/api/live-view`.
+- Keep watching `/api/live-view`.
 - If it is the human turn, stay attached and keep waiting. That is not completion.
-- If Codex moves, continue watching for the next turn instead of wrapping up.
-- Do not infer completion from silence, idleness, or the port being open. Completion comes only from `phase=finished` or an explicit user stop.
-- Think of the task as "monitor until terminal state", not "launch and report success".
+- If it is the agent turn, inspect the structured state and decide the move yourself, then POST `/api/agent-fire` exactly once for that `pendingAgentTurnId`.
+- Do not infer completion from silence or idleness. Completion comes only from `phase=finished` or an explicit user stop.
 
-## What The Built-In Runner Already Does
+## Allowed Actions
 
-- Starts or reuses the local server on `http://127.0.0.1:3197`
-- Handles setup and `/api/live-view` monitoring
-- Takes exactly one move per `pendingAgentTurnId`
-- Prints compact callouts like `Codex -> B4` and `B4 miss`
-- Stays alive for the full match
+- Start the server with `npm start`
+- GET `/api/live-view`
+- POST `/api/start` when setup is ready
+- POST `/api/setup/randomize` once during setup if needed
+- POST `/api/agent-fire` exactly once for the current `pendingAgentTurnId`
+
+There is intentionally no autoplay code in this repo. Codex is the opponent.

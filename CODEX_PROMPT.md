@@ -3,5 +3,5 @@
 Copy this into Codex:
 
 ```text
-Let's play Torpedex! This is a long-running monitoring task, not a one-shot setup task. Do not inspect the workspace or reuse an existing checkout. Run exactly this first: tmp="$(mktemp -d /tmp/torpedex-XXXXXX)" && git clone --depth 1 https://github.com/petergpt/torpedex.git "$tmp" && cd "$tmp" && ./play. After it starts, stay in monitoring mode. Treat `phase=setup` and `phase=playing` as active states. If `phase=playing` and `turn=human`, wait and keep monitoring; that is not completion. Only stop when `phase=finished` or I say stop.
+Let's play Torpedex! Clone or open the latest https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, start the server with npm start, tell me to open http://127.0.0.1:3197, then monitor /api/live-view yourself and play as Codex until phase=finished or I say stop. Do not write or run autoplay code, helper scripts, local heuristics, or external API opponents.
 ```
