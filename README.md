@@ -22,7 +22,9 @@ Requires Node.js 20 or newer.
 
 If you want the smoothest first-run experience, copy this into Codex:
 
-Let's play Torpedex! Clone or open https://github.com/petergpt/torpedex, read `CODEX_INSTRUCTIONS.md`, launch it at http://127.0.0.1:3197, and stay in the captain's chair as the live opponent until I say stop.
+```text
+Let's play Torpedex! Clone or open https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, launch it at http://127.0.0.1:3197, and stay in the captain's chair as the live opponent until I say stop.
+```
 
 The same prompt also lives in [CODEX_PROMPT.md](./CODEX_PROMPT.md).
 
