@@ -6,19 +6,7 @@ Torpedex is a small local game built around one simple loop: you play in the bro
 
 ![Torpedex board](./assets/torpedex-board.png)
 
-## Why This Exists
-
-Most AI game demos are one-shot. Torpedex is built for continuous play:
-
-- You open one local board.
-- You paste one prompt into Codex.
-- Codex keeps monitoring the live state and responds turn after turn until the game ends.
-
-## Get Playing
-
-Requires Node.js 20 or newer.
-
-### Paste This Into Codex
+## Paste This Into Codex
 
 If you want the smoothest first-run experience, copy this into Codex:
 
