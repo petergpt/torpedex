@@ -4,8 +4,8 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 
 ## One True Path
 
-- For live play, your first action should be `npm run codex:play` in the repo root.
-- If `npm run codex:play` exists, use it instead of manually implementing the protocol.
+- For live play, your first action should be `./play` in the repo root.
+- If `./play` exists, use it instead of manually implementing the protocol.
 - Keep that runner in the foreground and stay attached until the user says to stop.
 - Do not preflight the workspace before that command unless the command itself fails.
 
@@ -14,15 +14,15 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 - Bias toward action, not exploration.
 - Do not spend time scanning unrelated folders or enumerating the user's workspace before taking the obvious repo path.
 - Do not run `git status`, `npm test`, `npm install`, browser sanity checks, or similar preflight steps unless the user explicitly asked for them or the normal launch path fails.
-- Prefer the built-in runner `npm run codex:play` over ad-hoc inline loops.
-- Do not start helper bots, fallback loops, or browser-driven turn systems if `npm run codex:play` is available.
-- If the current checkout does not contain `npm run codex:play`, update to the latest repo or clone a fresh copy before doing anything else.
+- Prefer the built-in runner `./play` over ad-hoc inline loops.
+- Do not start helper bots, fallback loops, or browser-driven turn systems if `./play` is available.
+- If the current checkout does not contain `./play`, update to the latest repo or clone a fresh copy before doing anything else.
 - Once the server is up, switch immediately to `/api/live-view` monitoring and live play.
 
 ## Runtime Bootstrap
 
-- `npm run codex:play` already handles health checks, server reuse, startup, setup, and live monitoring.
-- Only drop to the lower-level bootstrap steps if `npm run codex:play` is unavailable or has already failed.
+- `./play` already handles health checks, server reuse, startup, setup, and live monitoring.
+- Only drop to the lower-level bootstrap steps if `./play` is unavailable or has already failed.
 - Before live play, check `http://127.0.0.1:3197/health`.
 - If the server is not reachable, launch it from the repo with `npm start`.
 - If port `3197` is already serving a healthy game, reuse that process instead of starting a second server.

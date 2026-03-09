@@ -11,12 +11,12 @@ Torpedex is built around one simple loop: you play in the browser, Codex stays a
 If you want the smoothest first-run experience, copy this into Codex:
 
 ```text
-Let's play Torpedex! Use the latest https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, then follow it exactly. Start by running npm run codex:play in the foreground and keep it running until I say stop.
+Let's play Torpedex! Do not inspect the workspace or reuse an existing checkout. Run exactly this first: tmp="$(mktemp -d /tmp/torpedex-XXXXXX)" && git clone --depth 1 https://github.com/petergpt/torpedex.git "$tmp" && cd "$tmp" && ./play. Keep that foreground process running until I say stop.
 ```
 
 The same prompt also lives in [CODEX_PROMPT.md](./CODEX_PROMPT.md).
 
-The detailed Codex playbook lives in [CODEX_INSTRUCTIONS.md](./CODEX_INSTRUCTIONS.md). The default path does not need browser automation or a custom loop.
+The detailed Codex playbook lives in [CODEX_INSTRUCTIONS.md](./CODEX_INSTRUCTIONS.md). The default path is one fresh clone and one `./play` command.
 
 ### Manual Option
 

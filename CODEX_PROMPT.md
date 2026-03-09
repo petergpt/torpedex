@@ -3,5 +3,5 @@
 Copy this into Codex:
 
 ```text
-Let's play Torpedex! Use the latest https://github.com/petergpt/torpedex, read CODEX_INSTRUCTIONS.md, then follow it exactly. Start by running npm run codex:play in the foreground and keep it running until I say stop.
+Let's play Torpedex! Do not inspect the workspace or reuse an existing checkout. Run exactly this first: tmp="$(mktemp -d /tmp/torpedex-XXXXXX)" && git clone --depth 1 https://github.com/petergpt/torpedex.git "$tmp" && cd "$tmp" && ./play. Keep that foreground process running until I say stop.
 ```

@@ -1,26 +1,32 @@
 # Codex Instructions
 
-Run this exact command now, in the repo root, in the foreground:
+Default path from outside the repo:
 
 ```bash
-npm run codex:play
+tmp="$(mktemp -d /tmp/torpedex-XXXXXX)" && git clone --depth 1 https://github.com/petergpt/torpedex.git "$tmp" && cd "$tmp" && ./play
+```
+
+If you are already inside a fresh Torpedex checkout, run this exact command now, in the repo root, in the foreground:
+
+```bash
+./play
 ```
 
 Then tell the user to open `http://127.0.0.1:3197`.
 
 Keep that same process running until the user says to stop.
 
-## Only If That Command Fails
-
-- If `npm run codex:play` fails because packages are missing, run `npm install` once and retry `npm run codex:play`.
-- If the current checkout does not contain `npm run codex:play`, switch to the latest Torpedex repo and then run it.
-
 ## Do Not Do Anything Before The Command
 
+- Do not look for an existing Torpedex checkout.
 - Do not inspect unrelated folders.
 - Do not run workspace inspection commands like `pwd` or `ls`.
 - Do not run `git status`.
+- Do not run `git remote -v`.
+- Do not run `git pull`.
+- Do not run `git fetch`.
 - Do not run `npm test`.
+- Do not run `npm install`.
 - Do not open the browser yourself.
 - Do not write your own loop.
 - Do not create a fallback.
