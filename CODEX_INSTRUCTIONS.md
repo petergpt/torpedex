@@ -16,6 +16,8 @@ Then tell the user to open `http://127.0.0.1:3197`.
 
 Keep that same process running until the user says to stop.
 
+Starting the process is not completion. After launch, stay attached to the live session and keep watching for turns.
+
 ## Do Not Do Anything Before The Command
 
 - Do not look for an existing Torpedex checkout.
@@ -33,6 +35,15 @@ Keep that same process running until the user says to stop.
 - Do not create a second watcher.
 - Do not background the main runner.
 - Do not stop after startup or after the first move.
+- Do not say the task is done right after launch.
+- Do not send a wrap-up message like "say stop when you want me to terminate it."
+
+## After Launch
+
+- Stay in live-play mode until the user says to stop or the game ends.
+- Keep watching the same runner session or `/api/live-view`.
+- If it is the human turn, stay attached and keep waiting. That is not completion.
+- If Codex moves, continue watching for the next turn instead of wrapping up.
 
 ## What The Built-In Runner Already Does
 

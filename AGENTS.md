@@ -8,6 +8,7 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 - If `./play` exists, use it instead of manually implementing the protocol.
 - Keep that runner in the foreground and stay attached until the user says to stop.
 - Do not preflight the workspace before that command unless the command itself fails.
+- Launching `./play` is not task completion. Stay in live-play mode after launch.
 
 ## Fast Start Bias
 
