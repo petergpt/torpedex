@@ -130,7 +130,7 @@ function logWaitingState(live) {
   if (live.turn) {
     parts.push(`turn=${live.turn}`);
   }
-  console.log(`Waiting. ${parts.join(" ")}`);
+  console.log(`Active wait. ${parts.join(" ")}. Monitoring continues.`);
 }
 
 function buildShotMap(codexShots) {

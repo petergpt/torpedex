@@ -10,6 +10,7 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 - Do not preflight the workspace before that command unless the command itself fails.
 - Launching `./play` is not task completion. Stay in live-play mode after launch.
 - Treat `phase=playing` with `turn=human` as an active waiting state, not a terminal state.
+- Treat the whole assignment as a monitoring task that ends only at a terminal state.
 
 ## Fast Start Bias
 

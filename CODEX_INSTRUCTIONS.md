@@ -18,6 +18,8 @@ Keep that same process running until the user says to stop.
 
 Starting the process is not completion. After launch, stay attached to the live session and keep watching for turns.
 
+This is a long-running monitoring task, not a one-shot setup task.
+
 ## Runtime State Machine
 
 Treat `/api/live-view` as the source of truth.
@@ -58,6 +60,7 @@ The most important rule is this:
 - If it is the human turn, stay attached and keep waiting. That is not completion.
 - If Codex moves, continue watching for the next turn instead of wrapping up.
 - Do not infer completion from silence, idleness, or the port being open. Completion comes only from `phase=finished` or an explicit user stop.
+- Think of the task as "monitor until terminal state", not "launch and report success".
 
 ## What The Built-In Runner Already Does
 
