@@ -24,6 +24,7 @@ npm start
 Then tell the user to open `http://127.0.0.1:3197`.
 
 Keep the server running. After launch, you must monitor the live game yourself and choose Codex turns yourself.
+Also keep the Captain Feed populated with short real notes via `/api/captain-note`.
 
 ## Runtime State Machine
 
@@ -57,9 +58,13 @@ The most important rule is this:
 
 - Stay in live-play mode until the user says to stop or the game ends.
 - Keep watching `/api/live-view`.
+- Immediately post one opening Captain Feed note with `/api/captain-note`, for example `On station. Waiting for your opening shot.` with kind `status`.
 - If it is the human turn, stay attached and keep waiting. That is not completion.
+- When the turn changes back to the human, post a short truthful Captain Feed status note if the feed would otherwise go quiet.
 - If it is the agent turn, inspect the structured state and decide the move yourself, then POST `/api/agent-fire` exactly once for that `pendingAgentTurnId`.
+- Before or after each Codex shot, post one short truthful Captain Feed note about the move or result.
 - Do not infer completion from silence or idleness. Completion comes only from `phase=finished` or an explicit user stop.
+- Do not spam the feed on every poll. Add notes on launch, turn changes, and Codex actions.
 
 ## Allowed Actions
 
@@ -67,6 +72,7 @@ The most important rule is this:
 - GET `/api/live-view`
 - POST `/api/start` when setup is ready
 - POST `/api/setup/randomize` once during setup if needed
+- POST `/api/captain-note` with short real notes
 - POST `/api/agent-fire` exactly once for the current `pendingAgentTurnId`
 
 There is intentionally no autoplay code in this repo. Codex is the opponent.

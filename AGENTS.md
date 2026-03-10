@@ -115,7 +115,7 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
   - sunk: `B4 sunk`
 - Do not narrate strategy unless the user asks.
 - If the game ends, say one final line: `Game over. Codex won.` or `Game over. You won.`
-- If the UI captain feed is enabled, only send notes that reflect real outward summaries you actually chose to provide. Do not invent fake “thinking” text.
+- If the UI captain feed is enabled, keep it populated. Post an opening status note, then add short truthful notes on turn changes and Codex actions. Do not invent fake “thinking” text.
 - Feed notes can be playful, sharp, or a little cocky, but they still need to be true to the move you are actually making.
 - Prefer short captain-style reactions over dry system prose. Good: `Center's dead water. Swinging east.` Bad: `Searching alternate coordinates.`
 
@@ -131,7 +131,7 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 - Use compact terminal actions:
   - read `/api/live-view`
   - if setup is ready, call `/api/start`
-  - optionally post `/api/captain-note` with a short real summary or reaction
+  - post `/api/captain-note` with a short real summary or reaction at launch, turn changes, and Codex actions
   - decide one legal shot yourself from the structured state
   - post `/api/agent-fire`
   - speak only the coordinate and coarse result
