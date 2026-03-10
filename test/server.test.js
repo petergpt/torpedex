@@ -51,6 +51,125 @@ test("human UI endpoints require the browser session cookie while live-view stay
   assert.equal(Array.isArray(payload.humanBoard.ships), true);
 });
 
+test("non-ui Codex endpoints return only live view and never human board state", async (t) => {
+  const port = await reservePort();
+  const server = spawn(process.execPath, ["server.js"], {
+    cwd: path.join(__dirname, ".."),
+    env: {
+      ...process.env,
+      PORT: String(port),
+    },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+
+  t.after(() => {
+    if (!server.killed) {
+      server.kill("SIGTERM");
+    }
+  });
+
+  await waitForServer(server, port);
+
+  let response = await fetch(`http://127.0.0.1:${port}/api/captain-note`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ kind: "status", text: "On station." }),
+  });
+  assert.equal(response.status, 200);
+  let payload = await response.json();
+  assert.equal(Boolean(payload.live), true);
+  assert.equal("state" in payload, false);
+
+  response = await fetch(`http://127.0.0.1:${port}/api/start`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}),
+  });
+  assert.equal(response.status, 200);
+  payload = await response.json();
+  assert.equal(Boolean(payload.live), true);
+  assert.equal("state" in payload, false);
+
+  response = await fetch(`http://127.0.0.1:${port}/api/live-view`);
+  payload = await response.json();
+  assert.equal(payload.phase, "playing");
+});
+
+test("agent fire accepts pendingAgentTurnId and rejects missing tokens", async (t) => {
+  const port = await reservePort();
+  const server = spawn(process.execPath, ["server.js"], {
+    cwd: path.join(__dirname, ".."),
+    env: {
+      ...process.env,
+      PORT: String(port),
+    },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+
+  t.after(() => {
+    if (!server.killed) {
+      server.kill("SIGTERM");
+    }
+  });
+
+  await waitForServer(server, port);
+
+  let response = await fetch(`http://127.0.0.1:${port}/api/start`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}),
+  });
+  let payload = await response.json();
+  assert.equal(payload.live.turn, "human");
+
+  response = await fetch(`http://127.0.0.1:${port}/api/agent-fire`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ row: 0, col: 0 }),
+  });
+  assert.equal(response.status, 400);
+  payload = await response.json();
+  assert.match(payload.error, /turn token is required/i);
+
+  response = await fetch(`http://127.0.0.1:${port}/api/fire`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ row: 0, col: 0 }),
+  });
+  assert.equal(response.status, 403);
+
+  const rootResponse = await fetch(`http://127.0.0.1:${port}/`);
+  const cookie = rootResponse.headers.get("set-cookie").split(";")[0];
+  response = await fetch(`http://127.0.0.1:${port}/api/fire`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookie,
+    },
+    body: JSON.stringify({ row: 0, col: 0 }),
+  });
+  payload = await response.json();
+  assert.equal(payload.state.turn, "agent");
+
+  response = await fetch(`http://127.0.0.1:${port}/api/live-view`);
+  const live = await response.json();
+  assert.equal(typeof live.pendingAgentTurnId, "number");
+
+  response = await fetch(`http://127.0.0.1:${port}/api/agent-fire`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      row: 0,
+      col: 0,
+      pendingAgentTurnId: live.pendingAgentTurnId,
+    }),
+  });
+  assert.equal(response.status, 200);
+  payload = await response.json();
+  assert.equal(Boolean(payload.live), true);
+  assert.equal("state" in payload, false);
+});
+
 async function reservePort() {
   return new Promise((resolve, reject) => {
     const socket = net.createServer();

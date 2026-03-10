@@ -80,7 +80,7 @@ const server = http.createServer(async (req, res) => {
     if (requestUrl.pathname === "/api/setup/randomize" && req.method === "POST") {
       const state = randomizeHumanFleet(game);
       broadcastState();
-      return sendJson(res, 200, { state });
+      return sendLiveOrHumanState(req, res, state);
     }
 
     if (requestUrl.pathname === "/api/setup/clear" && req.method === "POST") {
@@ -95,7 +95,7 @@ const server = http.createServer(async (req, res) => {
     if (requestUrl.pathname === "/api/start" && req.method === "POST") {
       const state = startBattle(game);
       broadcastState();
-      return sendJson(res, 200, { state });
+      return sendLiveOrHumanState(req, res, state);
     }
 
     if (requestUrl.pathname === "/api/fire" && req.method === "POST") {
@@ -113,7 +113,11 @@ const server = http.createServer(async (req, res) => {
 
     if (requestUrl.pathname === "/api/agent-fire" && req.method === "POST") {
       const body = await readJson(req);
-      const payload = takeAgentShot(game, Number(body.row), Number(body.col), body.turnToken);
+      const turnToken = body.turnToken ?? body.pendingAgentTurnId;
+      if (turnToken === undefined || turnToken === null) {
+        throw new Error("Codex turn token is required.");
+      }
+      const payload = takeAgentShot(game, Number(body.row), Number(body.col), turnToken);
       broadcastState();
       return sendJson(res, 200, {
         outcome: serializeOutcome(payload.outcome, { revealShipInfo: false }),
@@ -125,7 +129,7 @@ const server = http.createServer(async (req, res) => {
       const body = await readJson(req);
       const state = addCaptainNote(game, body.text, body.kind);
       broadcastState();
-      return sendJson(res, 200, { state });
+      return sendLiveOrHumanState(req, res, state);
     }
 
     if (requestUrl.pathname === "/api/rematch" && req.method === "POST") {
@@ -260,6 +264,13 @@ function broadcastState() {
 
 function sendStateEvent(res) {
   res.write(`event: state\ndata: ${JSON.stringify({ state: serializeGameForHuman(game) })}\n\n`);
+}
+
+function sendLiveOrHumanState(req, res, state) {
+  if (hasUiAccess(req)) {
+    return sendJson(res, 200, { state });
+  }
+  return sendJson(res, 200, { live: serializeLiveView(game) });
 }
 
 function hasUiAccess(req) {
