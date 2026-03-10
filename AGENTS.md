@@ -14,17 +14,19 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 
 - Bias toward action, not exploration.
 - Do not spend time scanning unrelated folders or enumerating the user's workspace before taking the obvious repo path.
+- For startup, do not run `ls`, `find`, `git status`, `git remote -v`, `git fetch`, `git pull`, `npm install`, or `npm test` unless the user explicitly asks or the live path has already failed.
+- Do not inspect or use existing local Torpedex repos during startup.
+- If the user is not already inside this repo, always prefer a fresh clone over searching the filesystem for existing Torpedex folders.
 - Do not run `git status`, `npm test`, `npm install`, browser sanity checks, or similar preflight steps unless the user explicitly asked for them or the normal launch path fails.
 - Do not start helper bots, fallback loops, browser-driven turn systems, or local move-selection code.
 - Once the server is up, switch immediately to `/api/live-view` monitoring and live play.
 
 ## Runtime Bootstrap
 
-- Before live play, check `http://127.0.0.1:3197/health`.
-- If the server is not reachable, launch it from the repo with `npm start`.
-- If port `3197` is already serving a healthy game, reuse that process instead of starting a second server.
+- For a fresh startup path, launch the server from the repo with `npm start`.
+- If `npm start` fails because port `3197` is already in use, handle that as an explicit port conflict rather than proactively searching for another local repo or server.
 - Keep exactly one long-lived server process during live play.
-- After launching or reconnecting, open `/api/live-view` immediately and treat that state as canonical.
+- After launching, open `/api/live-view` immediately and treat that state as canonical.
 
 ## Canonical State
 

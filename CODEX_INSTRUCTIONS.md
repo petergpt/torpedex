@@ -1,11 +1,25 @@
 # Codex Instructions
 
-Use the latest Torpedex repo.
+Startup contract for live play:
 
-First check `http://127.0.0.1:3197/health`.
+1. Do not inspect, search for, or use any existing local repo or checkout.
+2. Do not run commands against any existing local Torpedex clone.
+3. Do not read README or other repo files for startup. This file is sufficient.
+4. Use a fresh clone of the latest repo.
+5. Start the server with `npm start`.
+6. Then monitor `/api/live-view` yourself and play as Codex.
 
-- If it is healthy, reuse that server.
-- If it is not healthy, run `npm start` in the repo root.
+Fresh clone command:
+
+```bash
+tmp="$(mktemp -d /tmp/torpedex-XXXXXX)" && git clone --depth 1 https://github.com/petergpt/torpedex.git "$tmp" && cd "$tmp"
+```
+
+Run:
+
+```bash
+npm start
+```
 
 Then tell the user to open `http://127.0.0.1:3197`.
 
@@ -26,6 +40,11 @@ The most important rule is this:
 
 ## Do Not Do This
 
+- Do not run `ls`, `find`, or similar filesystem discovery commands.
+- Do not run `git status`, `git remote -v`, `git fetch`, or `git pull`.
+- Do not run any command against an existing local Torpedex checkout.
+- Do not do a startup health-check detour instead of starting the server.
+- Do not run `npm install` or `npm test`.
 - Do not open the browser yourself.
 - Do not write or run autoplay code.
 - Do not use local heuristics or helper scripts to choose moves.
