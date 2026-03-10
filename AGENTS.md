@@ -7,6 +7,7 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
 - There must not be any autoplay script, helper bot, heuristic engine, or API-driven opponent in this repo.
 - Codex itself is the opponent during live play.
 - Codex should monitor `/api/live-view`, reason from the structured state, and choose the move itself.
+- `/api/live-view` is the only fair-play state surface for Codex. `/api/state`, `/api/stream`, browser automation, and any other human UI surface are off-limits because they can expose hidden board data.
 - `phase=playing` with `turn=human` is an active waiting state, not a terminal state.
 - The assignment ends only at a terminal state or when the user says to stop.
 
@@ -44,7 +45,7 @@ Use this protocol for any live Codex-vs-human Battleship session in this repo.
   - `lastAgentMove`
   - `codexShots`
 - Do not infer state from browser text, console text, or free-form move log prose when the structured fields are present.
-- `/api/live-view` now carries both battle state and setup readiness. Use `/api/state` only when the human UI needs the full player-facing payload.
+- `/api/live-view` now carries both battle state and setup readiness. `/api/state` and `/api/stream` are reserved for the human UI and should not be used by Codex during live play.
 
 ## Turn Resolution
 

@@ -1,6 +1,7 @@
 const http = require("node:http");
 const path = require("node:path");
 const fs = require("node:fs/promises");
+const { randomUUID } = require("node:crypto");
 
 const {
   addCaptainNote,
@@ -20,6 +21,8 @@ const PORT = Number(process.env.PORT || 3197);
 const PUBLIC_DIR = path.join(__dirname, "public");
 const STREAM_RETRY_MS = 1500;
 const STREAM_HEARTBEAT_MS = 15000;
+const UI_SESSION_COOKIE = "torpedex_ui";
+const uiSessionToken = randomUUID();
 
 const CONTENT_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -37,6 +40,11 @@ const server = http.createServer(async (req, res) => {
     const requestUrl = new URL(req.url, `http://${req.headers.host}`);
 
     if (requestUrl.pathname === "/api/state" && req.method === "GET") {
+      if (!hasUiAccess(req)) {
+        return sendJson(res, 403, {
+          error: "Human UI state is not available from this client. Use /api/live-view for fair-play monitoring.",
+        });
+      }
       return sendJson(res, 200, serializeGameForHuman(game));
     }
 
@@ -45,10 +53,18 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (requestUrl.pathname === "/api/stream" && req.method === "GET") {
+      if (!hasUiAccess(req)) {
+        return sendJson(res, 403, {
+          error: "Human UI stream is not available from this client. Use /api/live-view for fair-play monitoring.",
+        });
+      }
       return openStateStream(req, res);
     }
 
     if (requestUrl.pathname === "/api/setup/place" && req.method === "POST") {
+      if (!hasUiAccess(req)) {
+        return sendJson(res, 403, { error: "Human ship placement is only available from the browser UI." });
+      }
       const body = await readJson(req);
       const state = placeHumanShip(
         game,
@@ -68,6 +84,9 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (requestUrl.pathname === "/api/setup/clear" && req.method === "POST") {
+      if (!hasUiAccess(req)) {
+        return sendJson(res, 403, { error: "Human fleet controls are only available from the browser UI." });
+      }
       const state = clearHumanFleet(game);
       broadcastState();
       return sendJson(res, 200, { state });
@@ -80,11 +99,14 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (requestUrl.pathname === "/api/fire" && req.method === "POST") {
+      if (!hasUiAccess(req)) {
+        return sendJson(res, 403, { error: "Human fire control is only available from the browser UI." });
+      }
       const body = await readJson(req);
       const payload = takeHumanShot(game, Number(body.row), Number(body.col));
       broadcastState();
       return sendJson(res, 200, {
-        outcome: payload.outcome,
+        outcome: serializeOutcome(payload.outcome, { revealShipInfo: false }),
         state: payload.state,
       });
     }
@@ -94,7 +116,7 @@ const server = http.createServer(async (req, res) => {
       const payload = takeAgentShot(game, Number(body.row), Number(body.col), body.turnToken);
       broadcastState();
       return sendJson(res, 200, {
-        outcome: payload.outcome,
+        outcome: serializeOutcome(payload.outcome, { revealShipInfo: false }),
         live: payload.live,
       });
     }
@@ -107,6 +129,9 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (requestUrl.pathname === "/api/rematch" && req.method === "POST") {
+      if (!hasUiAccess(req)) {
+        return sendJson(res, 403, { error: "Rematch control is only available from the browser UI." });
+      }
       const state = resetGame(game);
       broadcastState();
       return sendJson(res, 200, { state });
@@ -168,10 +193,14 @@ async function serveStatic(requestPath, res) {
 
   try {
     const file = await fs.readFile(filePath);
-    res.writeHead(200, {
+    const headers = {
       "Content-Type": CONTENT_TYPES[path.extname(filePath)] || "application/octet-stream",
       "Cache-Control": "no-store",
-    });
+    };
+    if (path.extname(filePath) === ".html") {
+      headers["Set-Cookie"] = `${UI_SESSION_COOKIE}=${uiSessionToken}; Path=/; HttpOnly; SameSite=Strict`;
+    }
+    res.writeHead(200, headers);
     res.end(file);
   } catch (error) {
     if (error.code === "ENOENT") {
@@ -231,4 +260,41 @@ function broadcastState() {
 
 function sendStateEvent(res) {
   res.write(`event: state\ndata: ${JSON.stringify({ state: serializeGameForHuman(game) })}\n\n`);
+}
+
+function hasUiAccess(req) {
+  const cookies = parseCookies(req.headers.cookie || "");
+  return cookies[UI_SESSION_COOKIE] === uiSessionToken;
+}
+
+function parseCookies(cookieHeader) {
+  return cookieHeader
+    .split(";")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .reduce((accumulator, pair) => {
+      const separatorIndex = pair.indexOf("=");
+      if (separatorIndex === -1) {
+        return accumulator;
+      }
+      const key = pair.slice(0, separatorIndex).trim();
+      const value = pair.slice(separatorIndex + 1).trim();
+      accumulator[key] = value;
+      return accumulator;
+    }, {});
+}
+
+function serializeOutcome(outcome, options = {}) {
+  const revealShipInfo = options.revealShipInfo === true;
+  const genericSummary =
+    outcome.result === "sunk" ? `${outcome.coord} sunk` : `${outcome.coord} ${outcome.result}`;
+  return {
+    row: outcome.row,
+    col: outcome.col,
+    coord: outcome.coord,
+    result: outcome.result,
+    shipKey: revealShipInfo ? outcome.shipKey : null,
+    shipName: revealShipInfo ? outcome.shipName : null,
+    summary: revealShipInfo ? outcome.summary : genericSummary,
+  };
 }

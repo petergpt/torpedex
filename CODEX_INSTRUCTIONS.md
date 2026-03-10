@@ -7,7 +7,7 @@ Startup contract for live play:
 3. Do not read README or other repo files for startup. This file is sufficient.
 4. Use a fresh clone of the latest repo.
 5. Start the server with `npm start`.
-6. Then monitor `/api/live-view` yourself and play as Codex.
+6. Then monitor only `/api/live-view` yourself and play as Codex.
 
 Fresh clone command:
 
@@ -28,7 +28,11 @@ Also keep the Captain Feed populated with short real notes via `/api/captain-not
 
 ## Runtime State Machine
 
-Treat `/api/live-view` as the source of truth.
+Treat `/api/live-view` as the only fair-play state surface.
+
+- `/api/live-view` is the source of truth for Codex.
+- `/api/state` and `/api/stream` are human UI surfaces and off-limits during live play because they can expose hidden board information.
+- If you touch a hidden-board surface, say so immediately and stop using that run for fair play.
 
 - `phase=setup`: active session, not completion
 - `phase=playing` and `turn=human`: active session, waiting state, not completion
@@ -47,6 +51,8 @@ The most important rule is this:
 - Do not do a startup health-check detour instead of starting the server.
 - Do not run `npm install` or `npm test`.
 - Do not open the browser yourself.
+- Do not GET `/api/state`.
+- Do not connect to `/api/stream`.
 - Do not write or run autoplay code.
 - Do not use local heuristics or helper scripts to choose moves.
 - Do not call external APIs or model APIs to choose moves.

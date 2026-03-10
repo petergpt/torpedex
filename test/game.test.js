@@ -96,6 +96,34 @@ test("stale Codex tokens are rejected and the live view only exposes Codex shot 
   assert.equal(liveView.humanShots.length, 1);
 });
 
+test("live view redacts human ship identity and detailed hit metadata", () => {
+  const game = createGame();
+  randomizeHumanFleet(game);
+  startBattle(game);
+
+  const humanShip = game.human.ships.find((ship) => ship.cells.length > 0);
+  const targetCell = humanShip.cells[0];
+  const afterHumanShot = takeHumanShot(game, BOARD_SIZE - 1, BOARD_SIZE - 1);
+
+  if (afterHumanShot.state.phase === "finished") {
+    return;
+  }
+
+  takeAgentShot(game, targetCell.row, targetCell.col, afterHumanShot.live.pendingAgentTurnId);
+  const liveView = serializeLiveView(game);
+  const codexShot = liveView.codexShots.find(
+    (shot) => shot.row === targetCell.row && shot.col === targetCell.col,
+  );
+
+  assert.ok(codexShot);
+  assert.equal(codexShot.shipKey, null);
+  assert.equal(codexShot.shipName, null);
+  assert.equal(liveView.lastEvent.shipName, null);
+  assert.equal(liveView.lastAgentMove.shipName, null);
+  assert.equal(liveView.lastMove.shipName, null);
+  assert.equal(liveView.lastEvent.detail.includes(humanShip.name), false);
+});
+
 test("human-facing target shots and hit events do not expose enemy ship identity", () => {
   const game = createGame();
   randomizeHumanFleet(game);
